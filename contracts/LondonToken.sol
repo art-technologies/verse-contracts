@@ -23,8 +23,8 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         _mint(account, id, amount, "");
         if (royaltyValue > 0) {
             _setTokenRoyalty(id, royaltyRecipient, royaltyValue);
-            totalSupply += amount;
         }
+        totalSupply += amount;
     }
 
     function mintBatch(
@@ -69,5 +69,25 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function mintWithCreator(
+        address creator,
+        address to,
+        uint256 tokenId,
+        address royaltyRecipient,
+        uint256 royaltyValue
+    ) public onlyOwner {
+        require(to != address(0), "mint to the zero address");
+
+        _balances[tokenId][to] += 1;
+
+        if (royaltyValue > 0) {
+            _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
+        }
+
+        address operator = _msgSender();
+        emit TransferSingle(operator, address(0), creator, tokenId, 1);
+        emit TransferSingle(operator, creator, to, tokenId, 1);
     }
 }
