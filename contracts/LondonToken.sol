@@ -1,21 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
+import "./ERC1155.sol";
 import "./ERC2981PerTokenRoyalties.sol";
 
 /// @custom:security-contact contact@verse.works
 contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
-    constructor() ERC1155("www.com") {}
+    constructor(string memory uri_) ERC1155(uri_) {}
 
     string public name = "London Collection";
-    uint256 public tokenCount;
 
-    function setURI(string memory newuri) public onlyOwner {
-        _setURI(newuri);
-    }
+    uint256 public totalSupply;
 
     function mint(
         address account,
@@ -27,7 +23,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         _mint(account, id, amount, "");
         if (royaltyValue > 0) {
             _setTokenRoyalty(id, royaltyRecipient, royaltyValue);
-            tokenCount += amount;
+            totalSupply += amount;
         }
     }
 
@@ -61,7 +57,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
                 count += ids[i] * amounts[j];
             }
         }
-        tokenCount += count;
+        totalSupply += count;
     }
 
     /// @inheritdoc	ERC165
@@ -73,9 +69,5 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
-    }
-
-    function totalSupply() public view returns (uint256) {
-        return tokenCount;
     }
 }
