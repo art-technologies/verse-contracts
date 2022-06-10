@@ -81,6 +81,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         require(to != address(0), "mint to the zero address");
 
         _balances[tokenId][to] += 1;
+        totalSupply += 1;
 
         if (royaltyValue > 0) {
             _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
