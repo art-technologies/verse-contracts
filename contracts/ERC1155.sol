@@ -24,11 +24,14 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
     // Mapping from token ID to account balances
     mapping(uint256 => mapping(address => uint256)) public _balances;
 
+    // Mapping from token ID to the IPFS cid
+    mapping(uint256 => string) public _cids;
+
     // Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
-    string private _uri;
+    // Used as the URI for all token types by relying on ID substitution, e.g.
+    string public _uri;
 
     /**
      * @dev See {_setURI}.
@@ -70,8 +73,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         override
         returns (string memory)
     {
-        return
-            string(abi.encodePacked(_uri, "/", Strings.toString(id), ".json"));
+        return string(abi.encodePacked(_uri, _cids[id]));
     }
 
     /**

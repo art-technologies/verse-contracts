@@ -17,6 +17,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         address account,
         uint256 id,
         uint256 amount,
+        string memory cid,
         address royaltyRecipient,
         uint256 royaltyValue
     ) public onlyOwner {
@@ -24,6 +25,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         if (royaltyValue > 0) {
             _setTokenRoyalty(id, royaltyRecipient, royaltyValue);
         }
+        _cids[id] = cid;
         totalSupply += amount;
     }
 
@@ -31,6 +33,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         address to,
         uint256[] memory ids,
         uint256[] memory amounts,
+        string[] memory cids,
         address[] memory royaltyRecipients,
         uint256[] memory royaltyValues
     ) public onlyOwner {
@@ -49,6 +52,9 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
                     royaltyValues[i]
                 );
             }
+
+            // update IPFS CID
+            _cids[ids[i]] = cids[i];
         }
 
         uint256 count;
@@ -75,6 +81,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         address creator,
         address to,
         uint256 tokenId,
+        string memory cid,
         address royaltyRecipient,
         uint256 royaltyValue
     ) public onlyOwner {
@@ -82,6 +89,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
 
         _balances[tokenId][to] += 1;
         totalSupply += 1;
+        _cids[tokenId] = cid;
 
         if (royaltyValue > 0) {
             _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
@@ -90,5 +98,21 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         address operator = _msgSender();
         emit TransferSingle(operator, address(0), creator, tokenId, 1);
         emit TransferSingle(operator, creator, to, tokenId, 1);
+    }
+
+    function setURI(string memory newuri) public onlyOwner {
+        _setURI(newuri);
+    }
+
+    function setRoyalties(
+        uint256 tokenId,
+        address royaltyRecipient,
+        uint256 royaltyValue
+    ) public onlyOwner {
+        _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
+    }
+
+    function setCID(uint256 tokenId, string memory cid) public onlyOwner {
+        _cids[tokenId] = cid;
     }
 }
