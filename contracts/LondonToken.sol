@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC1155.sol";
@@ -9,10 +9,22 @@ import "./ERC2981PerTokenRoyalties.sol";
 contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
     constructor(string memory uri_) ERC1155(uri_) {}
 
-    string public name = "London Collection";
+    string public constant name = "London Collection";
 
     uint256 public totalSupply;
 
+    /**
+     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
+     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
     function mint(
         address account,
         uint256 id,
@@ -25,15 +37,24 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         if (royaltyValue > 0) {
             _setTokenRoyalty(id, royaltyRecipient, royaltyValue);
         }
-        _cids[id] = cid;
+        cids[id] = cid;
         totalSupply += amount;
     }
 
+    /**
+     * @dev Batch version of `mint`.
+     *
+     * Requirements:
+     *
+     * - `ids` and `amounts` must have the same length.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155BatchReceived} and return the
+     * acceptance magic value.
+     */
     function mintBatch(
         address to,
         uint256[] memory ids,
         uint256[] memory amounts,
-        string[] memory cids,
+        string[] memory tokenCids,
         address[] memory royaltyRecipients,
         uint256[] memory royaltyValues
     ) public onlyOwner {
@@ -54,7 +75,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
             }
 
             // update IPFS CID
-            _cids[ids[i]] = cids[i];
+            cids[ids[i]] = tokenCids[i];
         }
 
         uint256 count;
@@ -66,7 +87,10 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         totalSupply += count;
     }
 
-    /// @inheritdoc	ERC165
+    /**
+     * @dev Checks for supported interface.
+     *
+     */
     function supportsInterface(bytes4 interfaceId)
         public
         view
@@ -77,6 +101,19 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         return super.supportsInterface(interfaceId);
     }
 
+    /**
+     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
+     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * Method emits two transfer events.
+     *
+     * Emits a {TransferSingle} event.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
     function mintWithCreator(
         address creator,
         address to,
@@ -87,9 +124,9 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
     ) public onlyOwner {
         require(to != address(0), "mint to the zero address");
 
-        _balances[tokenId][to] += 1;
+        balances[tokenId][to] += 1;
         totalSupply += 1;
-        _cids[tokenId] = cid;
+        cids[tokenId] = cid;
 
         if (royaltyValue > 0) {
             _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
@@ -100,10 +137,18 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         emit TransferSingle(operator, creator, to, tokenId, 1);
     }
 
+    /**
+     * @dev Sets base URI for metadata.
+     *
+     */
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
     }
 
+    /**
+     * @dev Sets royalties for `tokenId` and `tokenRecipient` with royalty value `royaltyValue`.
+     *
+     */
     function setRoyalties(
         uint256 tokenId,
         address royaltyRecipient,
@@ -112,7 +157,11 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
     }
 
+    /**
+     * @dev Sets IPFS cid metadata hash for token id `tokenId`.
+     *
+     */
     function setCID(uint256 tokenId, string memory cid) public onlyOwner {
-        _cids[tokenId] = cid;
+        cids[tokenId] = cid;
     }
 }

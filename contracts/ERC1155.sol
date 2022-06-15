@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC1155/ERC1155.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
@@ -22,16 +22,16 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
     using Address for address;
 
     // Mapping from token ID to account balances
-    mapping(uint256 => mapping(address => uint256)) public _balances;
+    mapping(uint256 => mapping(address => uint256)) public balances;
 
     // Mapping from token ID to the IPFS cid
-    mapping(uint256 => string) public _cids;
+    mapping(uint256 => string) public cids;
 
     // Mapping from account to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
     // Used as the URI for all token types by relying on ID substitution, e.g.
-    string public _uri;
+    string public baseUri;
 
     /**
      * @dev See {_setURI}.
@@ -73,7 +73,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         override
         returns (string memory)
     {
-        return string(abi.encodePacked(_uri, _cids[id]));
+        return string(abi.encodePacked(baseUri, cids[id]));
     }
 
     /**
@@ -94,7 +94,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
             account != address(0),
             "ERC1155: balance query for the zero address"
         );
-        return _balances[id][account];
+        return balances[id][account];
     }
 
     /**
@@ -210,15 +210,15 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
         _beforeTokenTransfer(operator, from, to, ids, amounts, data);
 
-        uint256 fromBalance = _balances[id][from];
+        uint256 fromBalance = balances[id][from];
         require(
             fromBalance >= amount,
             "ERC1155: insufficient balance for transfer"
         );
         unchecked {
-            _balances[id][from] = fromBalance - amount;
+            balances[id][from] = fromBalance - amount;
         }
-        _balances[id][to] += amount;
+        balances[id][to] += amount;
 
         emit TransferSingle(operator, from, to, id, amount);
 
@@ -258,15 +258,15 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
             uint256 id = ids[i];
             uint256 amount = amounts[i];
 
-            uint256 fromBalance = _balances[id][from];
+            uint256 fromBalance = balances[id][from];
             require(
                 fromBalance >= amount,
                 "ERC1155: insufficient balance for transfer"
             );
             unchecked {
-                _balances[id][from] = fromBalance - amount;
+                balances[id][from] = fromBalance - amount;
             }
-            _balances[id][to] += amount;
+            balances[id][to] += amount;
         }
 
         emit TransferBatch(operator, from, to, ids, amounts);
@@ -303,7 +303,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
      * this function emits no events.
      */
     function _setURI(string memory newuri) internal virtual {
-        _uri = newuri;
+        baseUri = newuri;
     }
 
     /**
@@ -331,7 +331,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
         _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
 
-        _balances[id][to] += amount;
+        balances[id][to] += amount;
         emit TransferSingle(operator, address(0), to, id, amount);
 
         _afterTokenTransfer(operator, address(0), to, ids, amounts, data);
@@ -372,7 +372,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         _beforeTokenTransfer(operator, address(0), to, ids, amounts, data);
 
         for (uint256 i = 0; i < ids.length; i++) {
-            _balances[ids[i]][to] += amounts[i];
+            balances[ids[i]][to] += amounts[i];
         }
 
         emit TransferBatch(operator, address(0), to, ids, amounts);
@@ -387,79 +387,6 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
             amounts,
             data
         );
-    }
-
-    /**
-     * @dev Destroys `amount` tokens of token type `id` from `from`
-     *
-     * Requirements:
-     *
-     * - `from` cannot be the zero address.
-     * - `from` must have at least `amount` tokens of token type `id`.
-     */
-    function _burn(
-        address from,
-        uint256 id,
-        uint256 amount
-    ) internal virtual {
-        require(from != address(0), "ERC1155: burn from the zero address");
-
-        address operator = _msgSender();
-        uint256[] memory ids = _asSingletonArray(id);
-        uint256[] memory amounts = _asSingletonArray(amount);
-
-        _beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
-
-        uint256 fromBalance = _balances[id][from];
-        require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
-        unchecked {
-            _balances[id][from] = fromBalance - amount;
-        }
-
-        emit TransferSingle(operator, from, address(0), id, amount);
-
-        _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
-    }
-
-    /**
-     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] version of {_burn}.
-     *
-     * Requirements:
-     *
-     * - `ids` and `amounts` must have the same length.
-     */
-    function _burnBatch(
-        address from,
-        uint256[] memory ids,
-        uint256[] memory amounts
-    ) internal virtual {
-        require(from != address(0), "ERC1155: burn from the zero address");
-        require(
-            ids.length == amounts.length,
-            "ERC1155: ids and amounts length mismatch"
-        );
-
-        address operator = _msgSender();
-
-        _beforeTokenTransfer(operator, from, address(0), ids, amounts, "");
-
-        for (uint256 i = 0; i < ids.length; i++) {
-            uint256 id = ids[i];
-            uint256 amount = amounts[i];
-
-            uint256 fromBalance = _balances[id][from];
-            require(
-                fromBalance >= amount,
-                "ERC1155: burn amount exceeds balance"
-            );
-            unchecked {
-                _balances[id][from] = fromBalance - amount;
-            }
-        }
-
-        emit TransferBatch(operator, from, address(0), ids, amounts);
-
-        _afterTokenTransfer(operator, from, address(0), ids, amounts, "");
     }
 
     /**
