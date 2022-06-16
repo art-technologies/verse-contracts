@@ -9,7 +9,7 @@ import "./ERC2981PerTokenRoyalties.sol";
 contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
     constructor(string memory uri_) ERC1155(uri_) {}
 
-    string public constant name = "London Collection";
+    string public constant name = "Verse Works";
 
     uint256 public totalSupply;
 
