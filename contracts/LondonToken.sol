@@ -111,8 +111,6 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
      * Requirements:
      *
      * - `to` cannot be the zero address.
-     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
-     * acceptance magic value.
      */
     function mintWithCreator(
         address creator,
@@ -135,6 +133,79 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         address operator = _msgSender();
         emit TransferSingle(operator, address(0), creator, tokenId, 1);
         emit TransferSingle(operator, creator, to, tokenId, 1);
+    }
+
+    /**
+     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
+     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * Method emits two transfer events.
+     *
+     * Emits a {TransferSingle} events for intermediate artist.
+     *
+     * Requirements:
+     *
+     * - `to` cannot be the zero address.
+     * - If `to` refers to a smart contract, it must implement {IERC1155Receiver-onERC1155Received} and return the
+     * acceptance magic value.
+     */
+    function batchMintWithCreator(
+        address to,
+        address[] memory creators,
+        uint256[] memory tokenIds,
+        string[] memory tokenCids,
+        address[] memory royaltyRecipients,
+        uint256[] memory royaltyValues
+    ) public onlyOwner {
+        require(
+            tokenIds.length == royaltyRecipients.length &&
+                tokenIds.length == royaltyValues.length,
+            "ERC1155: Arrays length mismatch"
+        );
+
+        address operator = _msgSender();
+
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            balances[tokenIds[i]][to] += 1;
+
+            // check if recipient can accept NFT
+            _doSafeTransferAcceptanceCheck(
+                operator,
+                address(0),
+                to,
+                tokenIds[i],
+                1,
+                ""
+            );
+
+            // update royalties
+            if (royaltyValues[i] > 0) {
+                _setTokenRoyalty(
+                    tokenIds[i],
+                    royaltyRecipients[i],
+                    royaltyValues[i]
+                );
+            }
+
+            // update IPFS CID
+            cids[tokenIds[i]] = tokenCids[i];
+
+            // emit events based on creator provided
+            if (creators[i] == address(0)) {
+                emit TransferSingle(operator, address(0), to, tokenIds[i], 1);
+            } else {
+                emit TransferSingle(
+                    operator,
+                    address(0),
+                    creators[i],
+                    tokenIds[i],
+                    1
+                );
+                emit TransferSingle(operator, creators[i], to, tokenIds[i], 1);
+            }
+        }
+
+        // update total supply
+        totalSupply += tokenIds.length;
     }
 
     /**
