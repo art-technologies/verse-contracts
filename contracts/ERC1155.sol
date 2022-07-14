@@ -469,7 +469,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) private {
+    ) public {
         if (to.isContract()) {
             try
                 IERC1155Receiver(to).onERC1155Received(
