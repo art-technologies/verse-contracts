@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 interface IVersePayments {
     /**
-     * @dev Payment evennt is emitted when user pays to the contract, where `metadata` is used to identify the payment.
+     * @dev Payment event is emitted when user pays to the contract, where `metadata` is used to identify the payment.
      */
     event Payment(string metadata, uint256 amount, address indexed buyer);
 
