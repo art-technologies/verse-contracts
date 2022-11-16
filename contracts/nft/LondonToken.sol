@@ -7,11 +7,20 @@ import "./ERC2981PerTokenRoyalties.sol";
 
 /// @custom:security-contact contact@verse.works
 contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
-    constructor(string memory uri_) ERC1155(uri_) {}
+    constructor(string memory uri_, address minter_) ERC1155(uri_) {
+        minter = minter_;
+    }
 
     string public constant name = "Verse Works";
 
     uint256 public totalSupply;
+
+    address public minter;
+
+    modifier onlyMinter() {
+        require(msg.sender == minter);
+        _;
+    }
 
     /**
      * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
@@ -32,7 +41,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         string memory cid,
         address royaltyRecipient,
         uint256 royaltyValue
-    ) public onlyOwner {
+    ) public onlyMinter {
         _mint(account, id, amount, "");
         if (royaltyValue > 0) {
             _setTokenRoyalty(id, royaltyRecipient, royaltyValue);
@@ -57,7 +66,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         string[] memory tokenCids,
         address[] memory royaltyRecipients,
         uint256[] memory royaltyValues
-    ) public onlyOwner {
+    ) public onlyMinter {
         require(
             ids.length == royaltyRecipients.length &&
                 ids.length == royaltyValues.length,
@@ -119,7 +128,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         string memory cid,
         address royaltyRecipient,
         uint256 royaltyValue
-    ) public onlyOwner {
+    ) public onlyMinter {
         require(to != address(0), "mint to the zero address");
 
         balances[tokenId][to] += 1;
@@ -155,7 +164,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
         string[] memory tokenCids,
         address[] memory royaltyRecipients,
         uint256[] memory royaltyValues
-    ) public onlyOwner {
+    ) public onlyMinter {
         require(
             tokenIds.length == royaltyRecipients.length &&
                 tokenIds.length == royaltyValues.length,
@@ -214,6 +223,14 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
      */
     function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
+    }
+
+    /**
+     * @dev Sets new minter for the contract.
+     *
+     */
+    function setMinter(address minter_) public onlyOwner {
+        minter = minter_;
     }
 
     /**
