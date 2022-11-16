@@ -46,9 +46,11 @@ interface IVersePayments {
  */
 contract VersePayments is Ownable, IVersePayments {
     address treasury;
+    address refundsManager;
 
-    constructor(address treasury_) {
+    constructor(address treasury_, address refundsManager_) {
         treasury = treasury_;
+        refundsManager = refundsManager_;
     }
 
     /**
@@ -65,7 +67,7 @@ contract VersePayments is Ownable, IVersePayments {
         string calldata metadata,
         uint256 amount,
         address buyer
-    ) public onlyOwner {
+    ) public onlyRefundsManager {
         (bool sent, ) = buyer.call{value: amount}("");
         require(sent, "Failed to send Ether");
         emit Refund(metadata);
@@ -78,5 +80,21 @@ contract VersePayments is Ownable, IVersePayments {
         uint256 balance = address(this).balance;
         (bool sent, ) = treasury.call{value: balance}("");
         require(sent, "Failed to send Ether");
+    }
+
+    /**
+     * @dev modifier to only
+     */
+    modifier onlyRefundsManager() {
+        require(msg.sender == refundsManager);
+        _;
+    }
+
+    /**
+     * @dev Sets new refunds manager for the contract.
+     *
+     */
+    function setRefundsManager(address refundsManager_) public onlyOwner {
+        refundsManager = refundsManager_;
     }
 }
