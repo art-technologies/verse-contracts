@@ -1,5 +1,5 @@
 node_modules/
-multisol-londontoken/
+multisol*
 .DS_Store
 cache/
 artifacts/

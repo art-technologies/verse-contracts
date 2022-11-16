@@ -1,6 +1,7 @@
 # verse-contracts
 
 ### Generate contract dependencies
+
 ```
-multisol contracts/LondonToken.sol 
+multisol contracts/nft/LondonToken.sol
 ```
