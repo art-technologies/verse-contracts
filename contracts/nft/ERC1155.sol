@@ -3,13 +3,13 @@
 
 pragma solidity 0.8.13;
 
-import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
-import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "./IERC1155.sol";
+import "./IERC1155Receiver.sol";
+import "./IERC1155MetadataURI.sol";
+import "./Address.sol";
+import "./Context.sol";
+import "./ERC165.sol";
+import "./Strings.sol";
 
 /**
  * @dev Implementation of the basic standard multi-token.
@@ -373,9 +373,8 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 
         for (uint256 i = 0; i < ids.length; i++) {
             balances[ids[i]][to] += amounts[i];
+            emit TransferSingle(operator, address(0), to, ids[i], amounts[i]);
         }
-
-        emit TransferBatch(operator, address(0), to, ids, amounts);
 
         _afterTokenTransfer(operator, address(0), to, ids, amounts, data);
 

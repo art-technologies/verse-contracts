@@ -4,9 +4,10 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC1155.sol";
 import "./ERC2981PerTokenRoyalties.sol";
+import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 /// @custom:security-contact contact@verse.works
-contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
+contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties, DefaultOperatorFilterer {
     constructor(string memory uri_, address minter_) ERC1155(uri_) {
         minter = minter_;
     }
@@ -20,6 +21,37 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties {
     modifier onlyMinter() {
         require(msg.sender == minter);
         _;
+    }
+
+    /**
+     * @dev OS Operator filtering
+     */
+    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
+        super.setApprovalForAll(operator, approved);
+    }
+
+    /**
+     * @dev OS Operator filtering
+     */
+    function safeTransferFrom(address from, address to, uint256 tokenId, uint256 amount, bytes memory data)
+        public
+        override
+        onlyAllowedOperator(from)
+    {
+        super.safeTransferFrom(from, to, tokenId, amount, data);
+    }
+
+    /**
+     * @dev OS Operator filtering
+     */
+    function safeBatchTransferFrom(
+        address from,
+        address to,
+        uint256[] memory ids,
+        uint256[] memory amounts,
+        bytes memory data
+    ) public virtual override onlyAllowedOperator(from) {
+        super.safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
     /**
