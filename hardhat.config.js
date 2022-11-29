@@ -28,6 +28,7 @@ module.exports = {
     //   accounts: ["<ADD WALLET PRIVATE KEY>"],
     // },
   },
+  sources: "./contracts/nft",
 
   //   etherscan: {
   //     // Your API key for Etherscan or Polygonscan

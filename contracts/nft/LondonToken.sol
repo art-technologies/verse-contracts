@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
-import "./Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC1155.sol";
 import "./ERC2981PerTokenRoyalties.sol";
-import {DefaultOperatorFilterer} from "./DefaultOperatorFilterer.sol";
+import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 /// @custom:security-contact contact@verse.works
 contract LondonToken is
