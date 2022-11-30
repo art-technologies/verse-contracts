@@ -7,37 +7,60 @@ import "./ERC2981PerTokenRoyalties.sol";
 import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 /// @custom:security-contact contact@verse.works
-contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties, DefaultOperatorFilterer {
-    constructor(string memory uri_, address minter_) ERC1155(uri_) {
-        minter = minter_;
+contract LondonToken is
+    ERC1155,
+    Ownable,
+    ERC2981PerTokenRoyalties,
+    DefaultOperatorFilterer
+{
+    constructor(
+        string memory uri_,
+        address minter_,
+        address gatewayManager_
+    ) ERC1155(uri_) {
+        mintingManager = minter_;
+        gatewayManager = gatewayManager_;
     }
 
-    string public constant name = "Verse Works";
+    string public constant name = "Verse Works v0.3.0";
 
     uint256 public totalSupply;
 
-    address public minter;
+    address public mintingManager;
+
+    address public gatewayManager;
 
     modifier onlyMinter() {
-        require(msg.sender == minter);
+        require(msg.sender == mintingManager);
+        _;
+    }
+
+    modifier onlyGatewayManager() {
+        require(msg.sender == gatewayManager);
         _;
     }
 
     /**
      * @dev OS Operator filtering
      */
-    function setApprovalForAll(address operator, bool approved) public override onlyAllowedOperatorApproval(operator) {
+    function setApprovalForAll(address operator, bool approved)
+        public
+        override
+        onlyAllowedOperatorApproval(operator)
+    {
         super.setApprovalForAll(operator, approved);
     }
 
     /**
      * @dev OS Operator filtering
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, uint256 amount, bytes memory data)
-        public
-        override
-        onlyAllowedOperator(from)
-    {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 tokenId,
+        uint256 amount,
+        bytes memory data
+    ) public override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId, amount, data);
     }
 
@@ -253,7 +276,7 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties, DefaultOpera
      * @dev Sets base URI for metadata.
      *
      */
-    function setURI(string memory newuri) public onlyOwner {
+    function setURI(string memory newuri) public onlyGatewayManager {
         _setURI(newuri);
     }
 
@@ -261,8 +284,16 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties, DefaultOpera
      * @dev Sets new minter for the contract.
      *
      */
-    function setMinter(address minter_) public onlyOwner {
-        minter = minter_;
+    function setMintingManager(address minter_) public onlyOwner {
+        mintingManager = minter_;
+    }
+
+    /**
+     * @dev Sets new gateway manager for the contract.
+     *
+     */
+    function setGatewayManager(address gatewayManager_) public onlyOwner {
+        gatewayManager = gatewayManager_;
     }
 
     /**
@@ -281,7 +312,27 @@ contract LondonToken is ERC1155, Ownable, ERC2981PerTokenRoyalties, DefaultOpera
      * @dev Sets IPFS cid metadata hash for token id `tokenId`.
      *
      */
-    function setCID(uint256 tokenId, string memory cid) public onlyOwner {
+    function setCID(uint256 tokenId, string memory cid)
+        public
+        onlyGatewayManager
+    {
         cids[tokenId] = cid;
+    }
+
+    /**
+     * @dev Sets IPFS cid metadata hash for token id `tokenId`.
+     *
+     */
+    function setCIDs(uint256[] memory tokenIds, string[] memory cids_)
+        public
+        onlyGatewayManager
+    {
+        require(
+            tokenIds.length == cids_.length,
+            "ERC1155: Arrays length mismatch"
+        );
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            cids[tokenIds[i]] = cids_[i];
+        }
     }
 }
