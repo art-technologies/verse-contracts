@@ -12,7 +12,7 @@ interface IVersePayments {
     /**
      * @dev Payment event is emitted when user pays to the contract, where `metadata` is used to identify the payment.
      */
-    event Payment(string metadata, uint256 amount, address indexed buyer, bytes32 hash);
+    event Payment(string metadata, uint256 amount, address indexed buyer);
 
     /**
      * @dev Refund event is emited during refund, where `metadata` is used to identify the payment.
@@ -37,6 +37,11 @@ interface IVersePayments {
      * @dev Withdraw method transfers all collected ETH to the treasury wallet.
      */
     function withdraw() external;
+
+    /**
+     * @dev Withdraw method transfers `amount` of collected ETH to the treasury wallet.
+     */
+    function withdrawAmount(uint256 amount) external;
 }
 
 /**
@@ -45,9 +50,8 @@ interface IVersePayments {
  * @notice This contract allows to capture ETH payments from private wallets that will be picked up by Verse platform.
  */
 contract VersePayments is Ownable, IVersePayments {
-    address public treasury;
-    address public refundsManager;
-    uint256 public paymentNumber = 0;
+    address treasury;
+    address refundsManager;
 
     constructor(address treasury_, address refundsManager_) {
         treasury = treasury_;
@@ -58,17 +62,7 @@ contract VersePayments is Ownable, IVersePayments {
      * @notice Pay method collects user payment for the item, where `metadata` is used to identify the payment and emits {Payment} event.
      */
     function pay(string calldata metadata) public payable {
-        paymentNumber = paymentNumber + 1;
-        bytes32 hash = keccak256(
-            abi.encodePacked(
-                paymentNumber,
-                block.number,
-                blockhash(block.number - 1),
-                address(this).balance,
-                keccak256(abi.encodePacked(block.number, blockhash(block.number - 2), block.timestamp, (block.timestamp % 200) + 1))
-            )
-        );
-        emit Payment(metadata, msg.value, msg.sender, hash);
+        emit Payment(metadata, msg.value, msg.sender);
     }
 
     /**
@@ -90,6 +84,14 @@ contract VersePayments is Ownable, IVersePayments {
     function withdraw() public onlyOwner {
         uint256 balance = address(this).balance;
         (bool sent, ) = treasury.call{value: balance}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    /**
+     * @dev Withdraw method transfers `amount` of collected ETH to the treasury wallet.
+     */
+    function withdrawAmount(uint256 amount) public onlyOwner {
+        (bool sent, ) = treasury.call{value: amount}("");
         require(sent, "Failed to send Ether");
     }
 

@@ -1,5 +1,11 @@
 # verse-contracts
 
+### Generate artifacts
+
+```
+npx hardhat compile
+```
+
 ### Generate contract dependencies
 
 ```
