@@ -4,16 +4,22 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC721.sol";
 import "./ERC2981PerTokenRoyalties.sol";
-import {UpdatableOperatorFilterer} from "./operator-filter-registry/UpdatableOperatorFilterer.sol";
-import {RevokableDefaultOperatorFilterer} from "./operator-filter-registry/RevokableDefaultOperatorFilterer.sol";
+import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 contract LondonToken is
     ERC721,
     Ownable,
     ERC2981PerTokenRoyalties,
-    RevokableDefaultOperatorFilterer
+    DefaultOperatorFilterer
 {
-    constructor(string memory uri_) ERC721("MyToken", "MTK", uri_) {}
+    constructor(
+        string memory uri_,
+        address minter_,
+        address gatewayManager_
+    ) ERC721("MyToken", "MTK", uri_) {
+        mintingManager = minter_;
+        gatewayManager = gatewayManager_;
+    }
 
     /**
      * @dev OS Operator filtering
@@ -69,16 +75,6 @@ contract LondonToken is
         bytes memory data
     ) public override onlyAllowedOperator(from) {
         super.safeTransferFrom(from, to, tokenId, data);
-    }
-
-    function owner()
-        public
-        view
-        virtual
-        override(Ownable, UpdatableOperatorFilterer)
-        returns (address)
-    {
-        return Ownable.owner();
     }
 
     address public mintingManager;
