@@ -105,7 +105,6 @@ contract VersePayments is Ownable, IVersePayments {
 
     /**
      * @dev Sets new refunds manager for the contract.
-     *
      */
     function setRefundsManager(address refundsManager_) public onlyOwner {
         refundsManager = refundsManager_;
@@ -117,4 +116,14 @@ contract VersePayments is Ownable, IVersePayments {
     function contractBalance() public view returns (uint256) {
         return address(this).balance;
     }
+
+    /**
+     * @dev allows smart contract to accept direct payments
+     */
+    fallback() external payable {}
+
+    /**
+     * @dev allows smart contract to accept direct payments
+     */
+    receive() external payable {}
 }
