@@ -16,7 +16,7 @@ contract LondonToken is
         string memory uri_,
         address minter_,
         address gatewayManager_
-    ) ERC721("MyToken", "MTK", uri_) {
+    ) ERC721("LondonToken_0.3", "VERSE", uri_) {
         mintingManager = minter_;
         gatewayManager = gatewayManager_;
     }
@@ -82,8 +82,8 @@ contract LondonToken is
     address public gatewayManager;
 
     /**
-     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
-     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * @dev Creates a token with `id`, and assigns them to `to`.
+     * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
      * Emits a {TransferSingle} event.
@@ -116,8 +116,8 @@ contract LondonToken is
     }
 
     /**
-     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
-     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * @dev Creates a token with `id`, and assigns them to `to`.
+     * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
      * Emits a {TransferSingle} events for intermediate artist.
