@@ -110,4 +110,11 @@ contract VersePayments is Ownable, IVersePayments {
     function setRefundsManager(address refundsManager_) public onlyOwner {
         refundsManager = refundsManager_;
     }
+
+    /**
+     * @dev contractBalance returns balance
+     */
+    function contractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 }
