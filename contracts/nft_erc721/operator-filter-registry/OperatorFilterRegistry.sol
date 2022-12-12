@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import {IOperatorFilterRegistry} from "./IOperatorFilterRegistry.sol";
-import {Ownable} from "openzeppelin-contracts/access/Ownable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import {OperatorFilterRegistryErrorsAndEvents} from "./OperatorFilterRegistryErrorsAndEvents.sol";
 
@@ -13,7 +13,10 @@ import {OperatorFilterRegistryErrorsAndEvents} from "./OperatorFilterRegistryErr
  * @notice This contracts allows tokens or token owners to register specific addresses or codeHashes that may be
  * *       restricted according to the isOperatorAllowed function.
  */
-contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegistryErrorsAndEvents {
+contract OperatorFilterRegistry is
+    IOperatorFilterRegistry,
+    OperatorFilterRegistryErrorsAndEvents
+{
     using EnumerableSet for EnumerableSet.AddressSet;
     using EnumerableSet for EnumerableSet.Bytes32Set;
 
@@ -53,7 +56,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      * @notice Returns true if operator is not filtered for a given token, either by address or codeHash. Also returns
      *         true if supplied registrant address is not registered.
      */
-    function isOperatorAllowed(address registrant, address operator) external view returns (bool) {
+    function isOperatorAllowed(address registrant, address operator)
+        external
+        view
+        returns (bool)
+    {
         address registration = _registrations[registrant];
         if (registration != address(0)) {
             EnumerableSet.AddressSet storage filteredOperatorsRef;
@@ -82,7 +89,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Registers an address with the registry. May be called by address itself or by EIP-173 owner.
      */
-    function register(address registrant) external onlyAddressOrOwner(registrant) {
+    function register(address registrant)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         if (_registrations[registrant] != address(0)) {
             revert AlreadyRegistered();
         }
@@ -95,7 +105,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      *         Note that this does not remove any filtered addresses or codeHashes.
      *         Also note that any subscriptions to this registrant will still be active and follow the existing filtered addresses and codehashes.
      */
-    function unregister(address registrant) external onlyAddressOrOwner(registrant) {
+    function unregister(address registrant)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         address registration = _registrations[registrant];
         if (registration == address(0)) {
             revert NotRegistered(registrant);
@@ -111,7 +124,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Registers an address with the registry and "subscribes" to another address's filtered operators and codeHashes.
      */
-    function registerAndSubscribe(address registrant, address subscription) external onlyAddressOrOwner(registrant) {
+    function registerAndSubscribe(address registrant, address subscription)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         address registration = _registrations[registrant];
         if (registration != address(0)) {
             revert AlreadyRegistered();
@@ -137,10 +153,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      * @notice Registers an address with the registry and copies the filtered operators and codeHashes from another
      *         address without subscribing.
      */
-    function registerAndCopyEntries(address registrant, address registrantToCopy)
-        external
-        onlyAddressOrOwner(registrant)
-    {
+    function registerAndCopyEntries(
+        address registrant,
+        address registrantToCopy
+    ) external onlyAddressOrOwner(registrant) {
         if (registrantToCopy == registrant) {
             revert CannotCopyFromSelf();
         }
@@ -160,10 +176,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Update an operator address for a registered address - when filtered is true, the operator is filtered.
      */
-    function updateOperator(address registrant, address operator, bool filtered)
-        external
-        onlyAddressOrOwner(registrant)
-    {
+    function updateOperator(
+        address registrant,
+        address operator,
+        bool filtered
+    ) external onlyAddressOrOwner(registrant) {
         address registration = _registrations[registrant];
         if (registration == address(0)) {
             revert NotRegistered(registrant);
@@ -171,7 +188,8 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
         if (registration != registrant) {
             revert CannotUpdateWhileSubscribed(registration);
         }
-        EnumerableSet.AddressSet storage filteredOperatorsRef = _filteredOperators[registrant];
+        EnumerableSet.AddressSet
+            storage filteredOperatorsRef = _filteredOperators[registrant];
 
         if (!filtered) {
             bool removed = filteredOperatorsRef.remove(operator);
@@ -190,10 +208,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Update a codeHash for a registered address - when filtered is true, the codeHash is filtered.
      */
-    function updateCodeHash(address registrant, bytes32 codeHash, bool filtered)
-        external
-        onlyAddressOrOwner(registrant)
-    {
+    function updateCodeHash(
+        address registrant,
+        bytes32 codeHash,
+        bool filtered
+    ) external onlyAddressOrOwner(registrant) {
         if (codeHash == EOA_CODEHASH) {
             revert CannotFilterEOAs();
         }
@@ -204,7 +223,8 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
         if (registration != registrant) {
             revert CannotUpdateWhileSubscribed(registration);
         }
-        EnumerableSet.Bytes32Set storage filteredCodeHashesRef = _filteredCodeHashes[registrant];
+        EnumerableSet.Bytes32Set
+            storage filteredCodeHashesRef = _filteredCodeHashes[registrant];
 
         if (!filtered) {
             bool removed = filteredCodeHashesRef.remove(codeHash);
@@ -223,10 +243,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Update multiple operators for a registered address - when filtered is true, the operators will be filtered. Reverts on duplicates.
      */
-    function updateOperators(address registrant, address[] calldata operators, bool filtered)
-        external
-        onlyAddressOrOwner(registrant)
-    {
+    function updateOperators(
+        address registrant,
+        address[] calldata operators,
+        bool filtered
+    ) external onlyAddressOrOwner(registrant) {
         address registration = _registrations[registrant];
         if (registration == address(0)) {
             revert NotRegistered(registrant);
@@ -234,7 +255,8 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
         if (registration != registrant) {
             revert CannotUpdateWhileSubscribed(registration);
         }
-        EnumerableSet.AddressSet storage filteredOperatorsRef = _filteredOperators[registrant];
+        EnumerableSet.AddressSet
+            storage filteredOperatorsRef = _filteredOperators[registrant];
         uint256 operatorsLength = operators.length;
         unchecked {
             if (!filtered) {
@@ -261,10 +283,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Update multiple codeHashes for a registered address - when filtered is true, the codeHashes will be filtered. Reverts on duplicates.
      */
-    function updateCodeHashes(address registrant, bytes32[] calldata codeHashes, bool filtered)
-        external
-        onlyAddressOrOwner(registrant)
-    {
+    function updateCodeHashes(
+        address registrant,
+        bytes32[] calldata codeHashes,
+        bool filtered
+    ) external onlyAddressOrOwner(registrant) {
         address registration = _registrations[registrant];
         if (registration == address(0)) {
             revert NotRegistered(registrant);
@@ -272,7 +295,8 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
         if (registration != registrant) {
             revert CannotUpdateWhileSubscribed(registration);
         }
-        EnumerableSet.Bytes32Set storage filteredCodeHashesRef = _filteredCodeHashes[registrant];
+        EnumerableSet.Bytes32Set
+            storage filteredCodeHashesRef = _filteredCodeHashes[registrant];
         uint256 codeHashesLength = codeHashes.length;
         unchecked {
             if (!filtered) {
@@ -306,7 +330,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      *         subscriptions will not be forwarded. Instead the former subscription's existing entries will still be
      *         used.
      */
-    function subscribe(address registrant, address newSubscription) external onlyAddressOrOwner(registrant) {
+    function subscribe(address registrant, address newSubscription)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         if (registrant == newSubscription) {
             revert CannotSubscribeToSelf();
         }
@@ -340,7 +367,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Unsubscribe an address from its current subscribed registrant, and optionally copy its filtered operators and codeHashes.
      */
-    function unsubscribe(address registrant, bool copyExistingEntries) external onlyAddressOrOwner(registrant) {
+    function unsubscribe(address registrant, bool copyExistingEntries)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         address registration = _registrations[registrant];
         if (registration == address(0)) {
             revert NotRegistered(registrant);
@@ -359,7 +389,10 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Copy filtered operators and codeHashes from a different registrantToCopy to addr.
      */
-    function copyEntriesOf(address registrant, address registrantToCopy) external onlyAddressOrOwner(registrant) {
+    function copyEntriesOf(address registrant, address registrantToCopy)
+        external
+        onlyAddressOrOwner(registrant)
+    {
         if (registrant == registrantToCopy) {
             revert CannotCopyFromSelf();
         }
@@ -378,9 +411,15 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     }
 
     /// @dev helper to copy entries from registrantToCopy to registrant and emit events
-    function _copyEntries(address registrant, address registrantToCopy) private {
-        EnumerableSet.AddressSet storage filteredOperatorsRef = _filteredOperators[registrantToCopy];
-        EnumerableSet.Bytes32Set storage filteredCodeHashesRef = _filteredCodeHashes[registrantToCopy];
+    function _copyEntries(address registrant, address registrantToCopy)
+        private
+    {
+        EnumerableSet.AddressSet
+            storage filteredOperatorsRef = _filteredOperators[registrantToCopy];
+        EnumerableSet.Bytes32Set
+            storage filteredCodeHashesRef = _filteredCodeHashes[
+                registrantToCopy
+            ];
         uint256 filteredOperatorsLength = filteredOperatorsRef.length();
         uint256 filteredCodeHashesLength = filteredCodeHashesRef.length();
         unchecked {
@@ -408,7 +447,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Get the subscription address of a given registrant, if any.
      */
-    function subscriptionOf(address registrant) external view returns (address subscription) {
+    function subscriptionOf(address registrant)
+        external
+        view
+        returns (address subscription)
+    {
         subscription = _registrations[registrant];
         if (subscription == address(0)) {
             revert NotRegistered(registrant);
@@ -421,7 +464,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      * @notice Get the set of addresses subscribed to a given registrant.
      *         Note that order is not guaranteed as updates are made.
      */
-    function subscribers(address registrant) external view returns (address[] memory) {
+    function subscribers(address registrant)
+        external
+        view
+        returns (address[] memory)
+    {
         return _subscribers[registrant].values();
     }
 
@@ -429,14 +476,22 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      * @notice Get the subscriber at a given index in the set of addresses subscribed to a given registrant.
      *         Note that order is not guaranteed as updates are made.
      */
-    function subscriberAt(address registrant, uint256 index) external view returns (address) {
+    function subscriberAt(address registrant, uint256 index)
+        external
+        view
+        returns (address)
+    {
         return _subscribers[registrant].at(index);
     }
 
     /**
      * @notice Returns true if operator is filtered by a given address or its subscription.
      */
-    function isOperatorFiltered(address registrant, address operator) external view returns (bool) {
+    function isOperatorFiltered(address registrant, address operator)
+        external
+        view
+        returns (bool)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredOperators[registration].contains(operator);
@@ -447,7 +502,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Returns true if a codeHash is filtered by a given address or its subscription.
      */
-    function isCodeHashFiltered(address registrant, bytes32 codeHash) external view returns (bool) {
+    function isCodeHashFiltered(address registrant, bytes32 codeHash)
+        external
+        view
+        returns (bool)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredCodeHashes[registration].contains(codeHash);
@@ -458,7 +517,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Returns true if the hash of an address's code is filtered by a given address or its subscription.
      */
-    function isCodeHashOfFiltered(address registrant, address operatorWithCode) external view returns (bool) {
+    function isCodeHashOfFiltered(address registrant, address operatorWithCode)
+        external
+        view
+        returns (bool)
+    {
         bytes32 codeHash = operatorWithCode.codehash;
         address registration = _registrations[registrant];
         if (registration != registrant) {
@@ -477,7 +540,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
     /**
      * @notice Returns a list of filtered operators for a given address or its subscription.
      */
-    function filteredOperators(address registrant) external view returns (address[] memory) {
+    function filteredOperators(address registrant)
+        external
+        view
+        returns (address[] memory)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredOperators[registration].values();
@@ -489,7 +556,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      * @notice Returns the set of filtered codeHashes for a given address or its subscription.
      *         Note that order is not guaranteed as updates are made.
      */
-    function filteredCodeHashes(address registrant) external view returns (bytes32[] memory) {
+    function filteredCodeHashes(address registrant)
+        external
+        view
+        returns (bytes32[] memory)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredCodeHashes[registration].values();
@@ -502,7 +573,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      *         its subscription.
      *         Note that order is not guaranteed as updates are made.
      */
-    function filteredOperatorAt(address registrant, uint256 index) external view returns (address) {
+    function filteredOperatorAt(address registrant, uint256 index)
+        external
+        view
+        returns (address)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredOperators[registration].at(index);
@@ -515,7 +590,11 @@ contract OperatorFilterRegistry is IOperatorFilterRegistry, OperatorFilterRegist
      *         its subscription.
      *         Note that order is not guaranteed as updates are made.
      */
-    function filteredCodeHashAt(address registrant, uint256 index) external view returns (bytes32) {
+    function filteredCodeHashAt(address registrant, uint256 index)
+        external
+        view
+        returns (bytes32)
+    {
         address registration = _registrations[registrant];
         if (registration != registrant) {
             return _filteredCodeHashes[registration].at(index);

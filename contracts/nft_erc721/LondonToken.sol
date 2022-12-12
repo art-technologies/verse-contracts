@@ -4,16 +4,22 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ERC721.sol";
 import "./ERC2981PerTokenRoyalties.sol";
-import {UpdatableOperatorFilterer} from "./operator-filter-registry/UpdatableOperatorFilterer.sol";
-import {RevokableDefaultOperatorFilterer} from "./operator-filter-registry/RevokableDefaultOperatorFilterer.sol";
+import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 contract LondonToken is
     ERC721,
     Ownable,
     ERC2981PerTokenRoyalties,
-    RevokableDefaultOperatorFilterer
+    DefaultOperatorFilterer
 {
-    constructor(string memory uri_) ERC721("MyToken", "MTK", uri_) {}
+    constructor(
+        string memory uri_,
+        address minter_,
+        address gatewayManager_
+    ) ERC721("LondonToken_0.3", "VERSE", uri_) {
+        mintingManager = minter_;
+        gatewayManager = gatewayManager_;
+    }
 
     /**
      * @dev OS Operator filtering
@@ -71,23 +77,13 @@ contract LondonToken is
         super.safeTransferFrom(from, to, tokenId, data);
     }
 
-    function owner()
-        public
-        view
-        virtual
-        override(Ownable, UpdatableOperatorFilterer)
-        returns (address)
-    {
-        return Ownable.owner();
-    }
-
     address public mintingManager;
 
     address public gatewayManager;
 
     /**
-     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
-     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * @dev Creates a token with `id`, and assigns them to `to`.
+     * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
      * Emits a {TransferSingle} event.
@@ -120,8 +116,8 @@ contract LondonToken is
     }
 
     /**
-     * @dev Creates `amount` tokens of token type `id`, and assigns them to `to`.
-     * In additionit sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
+     * @dev Creates a token with `id`, and assigns them to `to`.
+     * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
      * Emits a {TransferSingle} events for intermediate artist.
