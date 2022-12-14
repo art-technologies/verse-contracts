@@ -6,6 +6,7 @@ import "./ERC721.sol";
 import "./ERC2981PerTokenRoyalties.sol";
 import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
+/// @custom:security-contact contact@verse.works
 contract LondonToken is
     ERC721,
     Ownable,
@@ -86,7 +87,7 @@ contract LondonToken is
      * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
-     * Emits a {TransferSingle} event.
+     * Emits a {Transfer} event.
      *
      * Requirements:
      *
@@ -120,7 +121,7 @@ contract LondonToken is
      * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
-     * Emits a {TransferSingle} events for intermediate artist.
+     * Emits a {Transfer} events for intermediate artist.
      *
      * Requirements:
      *
