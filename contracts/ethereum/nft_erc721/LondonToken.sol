@@ -22,6 +22,8 @@ contract LondonToken is
         gatewayManager = gatewayManager_;
     }
 
+    uint256 public totalSupply;
+
     /**
      * @dev OS Operator filtering
      */
@@ -105,6 +107,7 @@ contract LondonToken is
         require(!_exists(tokenId), "ERC721: token already minted");
 
         _balances[to] += 1;
+        totalSupply += 1;
         _owners[tokenId] = to;
         _cids[tokenId] = cid;
 

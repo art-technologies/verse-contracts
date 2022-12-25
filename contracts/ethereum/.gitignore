@@ -1,0 +1,5 @@
+node_modules/
+multisol*
+.DS_Store
+cache/
+artifacts/
