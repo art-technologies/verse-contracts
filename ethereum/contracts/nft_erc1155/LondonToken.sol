@@ -213,58 +213,59 @@ contract LondonToken is
      * acceptance magic value.
      */
     function batchMintWithCreator(
-        address to,
-        address[] memory creators,
+        address[] memory to,
+        address creator,
         uint256[] memory tokenIds,
         string[] memory tokenCids,
-        address[] memory royaltyRecipients,
-        uint256[] memory royaltyValues
+        address royaltyRecipient,
+        uint256 royaltyValue
     ) public onlyMinter {
         require(
-            tokenIds.length == royaltyRecipients.length &&
-                tokenIds.length == royaltyValues.length,
+            tokenIds.length == to.length && tokenIds.length == tokenCids.length,
             "ERC1155: Arrays length mismatch"
         );
 
         address operator = _msgSender();
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            balances[tokenIds[i]][to] += 1;
+            balances[tokenIds[i]][to[i]] += 1;
 
             // check if recipient can accept NFT
             _doSafeTransferAcceptanceCheck(
                 operator,
                 address(0),
-                to,
+                to[i],
                 tokenIds[i],
                 1,
                 ""
             );
 
             // update royalties
-            if (royaltyValues[i] > 0) {
-                _setTokenRoyalty(
-                    tokenIds[i],
-                    royaltyRecipients[i],
-                    royaltyValues[i]
-                );
+            if (royaltyValue > 0) {
+                _setTokenRoyalty(tokenIds[i], royaltyRecipient, royaltyValue);
             }
 
             // update IPFS CID
             cids[tokenIds[i]] = tokenCids[i];
 
             // emit events based on creator provided
-            if (creators[i] == address(0)) {
-                emit TransferSingle(operator, address(0), to, tokenIds[i], 1);
+            if (creator == address(0)) {
+                emit TransferSingle(
+                    operator,
+                    address(0),
+                    to[i],
+                    tokenIds[i],
+                    1
+                );
             } else {
                 emit TransferSingle(
                     operator,
                     address(0),
-                    creators[i],
+                    creator,
                     tokenIds[i],
                     1
                 );
-                emit TransferSingle(operator, creators[i], to, tokenIds[i], 1);
+                emit TransferSingle(operator, creator, to[i], tokenIds[i], 1);
             }
         }
 
