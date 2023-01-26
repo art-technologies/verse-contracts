@@ -11,7 +11,8 @@ event Pay {
 }
 
 event Refund {
-    metadata: string
+    metadata: string;
+    amount: tez;
 }
 
 entry pay(meta: string) {
@@ -25,7 +26,7 @@ entry refund(meta: string, refund_amount: tez, refund_buyer: address) {
     }
     effect {
         transfer refund_amount to refund_buyer;
-        emit<Refund>({meta});
+        emit<Refund>({meta; refund_amount});
     }
 }
 
