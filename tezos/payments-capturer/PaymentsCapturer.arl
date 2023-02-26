@@ -1,0 +1,68 @@
+archetype PaymentsCapturer(
+    admin: address,
+    treasury: address,
+    refund_manager: address
+)
+
+event Pay {
+  metadata : string;
+  amount : tez;
+  buyer: address;
+}
+
+event Refund {
+    metadata: string;
+    amount: tez;
+}
+
+event Fund {
+    metadata: string;
+    amount: tez;
+}
+
+entry pay(meta: string) {
+    emit<Pay>({meta; transferred; caller})
+}
+
+entry refund(meta: string, refund_amount: tez, refund_buyer: address) {
+    called by refund_manager
+    require {
+        r1: balance >= refund_amount
+    }
+    effect {
+        transfer refund_amount to refund_buyer;
+        emit<Refund>({meta; refund_amount});
+    }
+}
+
+entry withdraw() {
+    called by admin
+    effect {
+        transfer balance to treasury
+    }
+}
+
+entry withdrawAmount(withdraw_amount: tez) {
+    called by admin
+    effect {
+        transfer withdraw_amount to treasury
+    }
+}
+
+entry updateTreasury(new_treasury: address) {
+    called by admin
+    effect {
+        treasury := new_treasury
+    }
+}
+
+entry updateRefundManager(new_refund_manager: address) {
+    called by admin
+    effect {
+        refund_manager := new_refund_manager
+    }
+}
+
+entry fund(meta: string) {
+    emit<Fund>({meta; transferred});
+}
