@@ -16,13 +16,15 @@ contract LondonToken is
     constructor(
         string memory uri_,
         address minter_,
-        address gatewayManager_
+        address gatewayManager_,
+        string memory contractName_
     ) ERC1155(uri_) {
         mintingManager = minter_;
         gatewayManager = gatewayManager_;
+        name = contractName_;
     }
 
-    string public constant name = "Verse Works v0.3.0";
+    string public name = "Verse Works v0.4.0";
 
     uint256 public totalSupply;
 
