@@ -113,7 +113,6 @@ contract LondonEditionToken is
 
     /**
      * @dev Creates a token with `id`, and assigns them to `to`.
-     * In addition it sets the royalties for `royaltyRecipient` of the value `royaltyValue`.
      * Method emits two transfer events.
      *
      * Emits a {Transfer} events for intermediate artist.
