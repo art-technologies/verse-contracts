@@ -7,7 +7,7 @@ import "./ERC2981PerTokenRoyalties.sol";
 import {DefaultOperatorFilterer} from "./operator-filter-registry/DefaultOperatorFilterer.sol";
 
 /// @custom:security-contact contact@verse.works
-contract LondonToken is
+contract LondonEditionToken is
     ERC721,
     Ownable,
     ERC2981PerTokenRoyalties,
@@ -17,10 +17,12 @@ contract LondonToken is
         string memory uri_,
         address minter_,
         address gatewayManager_,
-        string memory contractName_
+        string memory contractName_,
+        uint256 royaltyValue_
     ) ERC721(contractName_, "VERSE", uri_) {
         mintingManager = minter_;
         gatewayManager = gatewayManager_;
+        _setTokenRoyalty(msg.sender, royaltyValue_);
     }
 
     uint256 public totalSupply;
@@ -97,10 +99,7 @@ contract LondonToken is
     function mintWithCreator(
         address creator,
         address to,
-        uint256 tokenId,
-        string memory cid,
-        address royaltyRecipient,
-        uint256 royaltyValue
+        uint256 tokenId
     ) public onlyMinter {
         require(to != address(0), "mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
@@ -108,11 +107,6 @@ contract LondonToken is
         _balances[to] += 1;
         totalSupply += 1;
         _owners[tokenId] = to;
-        _cids[tokenId] = cid;
-
-        if (royaltyValue > 0) {
-            _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
-        }
 
         emit Transfer(address(0), creator, tokenId);
         emit Transfer(creator, to, tokenId);
@@ -134,25 +128,12 @@ contract LondonToken is
     function batchMintWithCreator(
         address[] memory to,
         address creator,
-        uint256[] memory tokenIds,
-        string[] memory tokenCids,
-        address royaltyRecipient,
-        uint256 royaltyValue
+        uint256[] memory tokenIds
     ) public onlyMinter {
-        require(
-            tokenIds.length == to.length && tokenIds.length == tokenCids.length,
-            "Arrays length mismatch"
-        );
+        require(tokenIds.length == to.length, "Arrays length mismatch");
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            mintWithCreator(
-                creator,
-                to[i],
-                tokenIds[i],
-                tokenCids[i],
-                royaltyRecipient,
-                royaltyValue
-            );
+            mintWithCreator(creator, to[i], tokenIds[i]);
         }
     }
 
@@ -187,11 +168,10 @@ contract LondonToken is
      *
      */
     function setRoyalties(
-        uint256 tokenId,
         address royaltyRecipient,
         uint256 royaltyValue
     ) public onlyOwner {
-        _setTokenRoyalty(tokenId, royaltyRecipient, royaltyValue);
+        _setTokenRoyalty(royaltyRecipient, royaltyValue);
     }
 
     /**
@@ -216,33 +196,5 @@ contract LondonToken is
      */
     function setURI(string memory newuri) public onlyGatewayManager {
         _setURI(newuri);
-    }
-
-    /**
-     * @dev Sets IPFS cid metadata hash for token id `tokenId`.
-     *
-     */
-    function setCID(
-        uint256 tokenId,
-        string memory cid
-    ) public onlyGatewayManager {
-        _cids[tokenId] = cid;
-    }
-
-    /**
-     * @dev Sets IPFS cid metadata hash for token id `tokenId`.
-     *
-     */
-    function setCIDs(
-        uint256[] memory tokenIds,
-        string[] memory cids_
-    ) public onlyGatewayManager {
-        require(
-            tokenIds.length == cids_.length,
-            "ERC1155: Arrays length mismatch"
-        );
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            _cids[tokenIds[i]] = cids_[i];
-        }
     }
 }

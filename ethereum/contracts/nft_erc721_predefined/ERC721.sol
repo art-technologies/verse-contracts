@@ -38,9 +38,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    // Mapping from token ID to the IPFS cid
-    mapping(uint256 => string) public _cids;
-
     // Used as the URI for all token types by relying on ID substitution, e.g.
     string public _baseUri;
 
@@ -118,7 +115,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         string memory baseURI = _baseUri;
         return
             bytes(baseURI).length > 0
-                ? string(abi.encodePacked(baseURI, _cids[tokenId]))
+                ? string(abi.encodePacked(baseURI, tokenId))
                 : "";
     }
 
@@ -299,11 +296,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
      *
      * Emits a {Transfer} event.
      */
-    function _mint(
-        address to,
-        uint256 tokenId,
-        string memory cid
-    ) internal virtual {
+    function _mint(address to, uint256 tokenId) internal virtual {
         require(to != address(0), "ERC721: mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
 
@@ -321,7 +314,6 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
         }
 
         _owners[tokenId] = to;
-        _cids[tokenId] = cid;
 
         emit Transfer(address(0), to, tokenId);
 
