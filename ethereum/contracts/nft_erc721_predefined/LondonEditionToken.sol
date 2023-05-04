@@ -23,9 +23,12 @@ contract LondonEditionToken is
         mintingManager = minter_;
         gatewayManager = gatewayManager_;
         _setTokenRoyalty(msg.sender, royaltyValue_);
+        creator = msg.sender;
     }
 
     uint256 public totalSupply;
+
+    address public creator;
 
     /**
      * @dev OS Operator filtering
@@ -96,11 +99,7 @@ contract LondonEditionToken is
      *
      * - `to` cannot be the zero address.
      */
-    function mintWithCreator(
-        address creator,
-        address to,
-        uint256 tokenId
-    ) public onlyMinter {
+    function mintWithCreator(address to, uint256 tokenId) public onlyMinter {
         require(to != address(0), "mint to the zero address");
         require(!_exists(tokenId), "ERC721: token already minted");
 
@@ -127,13 +126,12 @@ contract LondonEditionToken is
      */
     function batchMintWithCreator(
         address[] memory to,
-        address creator,
         uint256[] memory tokenIds
     ) public onlyMinter {
         require(tokenIds.length == to.length, "Arrays length mismatch");
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            mintWithCreator(creator, to[i], tokenIds[i]);
+            mintWithCreator(to[i], tokenIds[i]);
         }
     }
 
