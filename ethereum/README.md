@@ -10,5 +10,5 @@ npx hardhat compile
 
 ```
 multisol contracts/nft/LondonToken.sol
-multisol contracts/nft_erc721_predefined/LondonEditionToken.sol
+multisol contracts/nft_erc721_curated/LondonTokenCurated.sol
 ```

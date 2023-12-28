@@ -37,6 +37,11 @@ interface IVersePayments {
      * @dev Withdraw method transfers all collected ETH to the treasury wallet.
      */
     function withdraw() external;
+
+    /**
+     * @dev Withdraw method transfers `amount` of collected ETH to the treasury wallet.
+     */
+    function withdrawAmount(uint256 amount) external;
 }
 
 /**
@@ -83,6 +88,14 @@ contract VersePayments is Ownable, IVersePayments {
     }
 
     /**
+     * @dev Withdraw method transfers `amount` of collected ETH to the treasury wallet.
+     */
+    function withdrawAmount(uint256 amount) public onlyOwner {
+        (bool sent, ) = treasury.call{value: amount}("");
+        require(sent, "Failed to send Ether");
+    }
+
+    /**
      * @dev modifier to only
      */
     modifier onlyRefundsManager() {
@@ -91,10 +104,34 @@ contract VersePayments is Ownable, IVersePayments {
     }
 
     /**
+     * @dev Prevents renounce Ownership
+     */
+    // solhint-disable-next-line
+    function renounceOwnership() public override onlyOwner {
+        revert("Renouncing ownership is disabled");
+    }
+
+    /**
      * @dev Sets new refunds manager for the contract.
-     *
      */
     function setRefundsManager(address refundsManager_) public onlyOwner {
         refundsManager = refundsManager_;
     }
+
+    /**
+     * @dev contractBalance returns balance
+     */
+    function contractBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    /**
+     * @dev allows smart contract to accept direct payments
+     */
+    fallback() external payable {}
+
+    /**
+     * @dev allows smart contract to accept direct payments
+     */
+    receive() external payable {}
 }

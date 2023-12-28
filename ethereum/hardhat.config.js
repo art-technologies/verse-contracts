@@ -34,4 +34,8 @@ module.exports = {
   //     // Your API key for Etherscan or Polygonscan
   //     apiKey: "<ADD API KEY>",
   //   },
+  gasReporter: {
+    enable: true,
+    currency: 'USD',
+  },
 };
