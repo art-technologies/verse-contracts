@@ -3,5 +3,5 @@
 Deploy
 
 ```
-completium-cli deploy ./PaymentsCapturerV1.arl --parameters '{ "admin": "x", "treasury": "y", "refund_manager": "z" }'
+completium-cli deploy ./PaymentsCapturer.arl --parameters '{ "admin": "x", "treasury": "y", "refund_manager": "z" }'
 ```
