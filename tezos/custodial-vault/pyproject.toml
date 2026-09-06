@@ -1,0 +1,27 @@
+[project]
+name = "tezos-nft-vault"
+version = "0.1.0"
+description = "Custodial NFT vault for FA2/TZIP-12 assets on Tezos (SmartPy)"
+requires-python = ">=3.10"
+# The Michelson in build/ was produced with exactly this compiler version.
+# Bump deliberately and recompile/retest when doing so (uv lock pins the rest).
+dependencies = [
+    "smartpy-tezos==0.24.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+# Defaults (pyflakes/pycodestyle) plus import sorting.
+# SmartPy DSL code (sp.module) is regular Python syntax, so ruff works on it.
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["contracts", "tests", "integration", "scripts"]

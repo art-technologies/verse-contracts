@@ -1,0 +1,7 @@
+{
+    "filter_paths": "lib|test|script",
+    "detectors_to_exclude": "solc-version,naming-convention",
+    "exclude_dependencies": true,
+    "fail_on": "medium",
+    "compile_force_framework": "foundry"
+}

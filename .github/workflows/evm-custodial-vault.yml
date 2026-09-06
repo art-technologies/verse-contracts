@@ -1,0 +1,70 @@
+name: EVM custodial vault CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "ethereum/custodial-vault/**"
+      - ".gitmodules"
+      - ".github/workflows/evm-custodial-vault.yml"
+  pull_request:
+    paths:
+      - "ethereum/custodial-vault/**"
+      - ".gitmodules"
+      - ".github/workflows/evm-custodial-vault.yml"
+
+env:
+  FOUNDRY_PROFILE: ci
+
+defaults:
+  run:
+    working-directory: ethereum/custodial-vault
+
+jobs:
+  quality-gates:
+    name: fmt / build / test / snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry (pinned)
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+
+      - name: Formatting gate
+        run: forge fmt --check
+
+      - name: Build with size report
+        run: forge build --sizes
+
+      - name: Tests (unit, fuzz, invariant, gas; fork tests skip without RPC)
+        run: forge test -vvv
+
+      - name: Gas snapshot gate (deterministic gas suite only)
+        run: FOUNDRY_PROFILE=default forge snapshot --match-path "test/gas/*" --check
+
+  slither:
+    name: slither
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry (pinned)
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v1.7.1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Slither (pinned)
+        run: pip install slither-analyzer==0.11.3
+
+      - name: Static analysis gate
+        run: slither .

@@ -1,0 +1,29 @@
+{
+  "_instructions": "Approved deployment manifest for Polygon PoS. Replace every placeholder address before deployment: `admin` MUST be the dedicated production Safe (a deployed contract), `managers`/`emergencyLockers` MUST be non-zero, unique, strictly ascending, and 1-10 entries each. DeployVault.s.sol reads this file, validates it, and writes the deployment record into `.deployment`. Managers must be direct EOAs; any contract manager must be listed in `auditedForwarders`. Managers and emergencyLockers must be disjoint unless `allowManagerLockerOverlap` is true (requires explicit threat-model approval).",
+  "chainName": "polygon",
+  "chainId": 137,
+  "admin": "0x0000000000000000000000000000000000000000",
+  "managers": [
+    "0x0000000000000000000000000000000000000000"
+  ],
+  "emergencyLockers": [
+    "0x0000000000000000000000000000000000000000"
+  ],
+  "auditedForwarders": [],
+  "allowManagerLockerOverlap": false,
+  "limits": {
+    "maxTokens": 100,
+    "periodSeconds": 3600,
+    "maxItemsPerBatch": 50
+  },
+  "deployment": {
+    "address": "0x0000000000000000000000000000000000000000",
+    "chainId": 0,
+    "deploymentBlock": 0,
+    "constructorArgs": "0x",
+    "runtimeBytecodeHash": "0x",
+    "creationBytecodeHash": "0x",
+    "broadcastDir": "",
+    "transactionHash": ""
+  }
+}

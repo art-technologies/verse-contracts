@@ -1,0 +1,9 @@
+.idea/
+.scenarios/
+__pycache__/
+.ligo/
+.venv/
+# deployment keys, wallets and per-deployment artifacts — never commit
+deploy/
+deploy-mainnet-test/
+.venv-deploy-*/

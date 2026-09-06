@@ -1,0 +1,30 @@
+{
+  "_instructions": "Approved deployment manifest for Shape Mainnet. Replace every placeholder address before deployment: `admin` MUST be the dedicated production Safe (a deployed contract), `managers`/`emergencyLockers` MUST be non-zero, unique, strictly ascending, and 1-10 entries each. DeployVault.s.sol reads this file, validates it, and writes the deployment record into `.deployment`. Managers must be direct EOAs; any contract manager must be listed in `auditedForwarders`. Managers and emergencyLockers must be disjoint unless `allowManagerLockerOverlap` is true (requires explicit threat-model approval).",
+  "chainName": "shape",
+  "chainId": 360,
+  "admin": "0x6D5A4350155Ec5895096A45065ed3f20bA2FAe6e",
+  "managers": [
+    "0x045F12d20d1faD13d3DB3D68b122aBD4640ef081"
+  ],
+  "emergencyLockers": [
+    "0x6D5A4350155Ec5895096A45065ed3f20bA2FAe6e"
+  ],
+  "auditedForwarders": [],
+  "allowManagerLockerOverlap": false,
+  "allowEOAAdmin": true,
+  "limits": {
+    "maxTokens": 100,
+    "periodSeconds": 3600,
+    "maxItemsPerBatch": 50
+  },
+  "deployment": {
+    "address": "0x733b0d5a9FC53f35f55754aB5eA58e10004aec11",
+    "broadcastDir": "broadcast/DeployVault.s.sol/360",
+    "chainId": 360,
+    "constructorArgs": "0x0000000000000000000000006d5a4350155ec5895096a45065ed3f20ba2fae6e00000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000000e1000000000000000000000000000000000000000000000000000000000000000320000000000000000000000000000000000000000000000000000000000000001000000000000000000000000045f12d20d1fad13d3db3d68b122abd4640ef08100000000000000000000000000000000000000000000000000000000000000010000000000000000000000006d5a4350155ec5895096a45065ed3f20ba2fae6e",
+    "contractName": "CustodialNFTVault",
+    "creationBytecodeHash": "0x88fdf3fa6ad7bd2f40613864ddfadb1128ac75cf937a9aa4c91eaa642c5317af",
+    "deploymentBlock": 32353937,
+    "runtimeBytecodeHash": "0x690fb53ccbd06fd5e683d4e930ab2b3d199efbd701b8f20fc6c8ef8df272f794"
+  }
+}
