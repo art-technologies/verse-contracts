@@ -1,0 +1,6 @@
+[submodule "ethereum/custodial-vault/lib/openzeppelin-contracts"]
+	path = ethereum/custodial-vault/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "ethereum/custodial-vault/lib/forge-std"]
+	path = ethereum/custodial-vault/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
