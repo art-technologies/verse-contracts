@@ -228,4 +228,3 @@ and the registry guards each makes at least one test fail.
    - check what happens if the artist never configures earnings;
    - check the SDK `fulfillOrder` path used by the Verse trading wallet.
 2. Venly `NFT_TRANSFER` on a LondonTokenC collection, including gas estimation.
-3. External review of the exemption and registry governance (Safe, optional timelock).
