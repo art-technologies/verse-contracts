@@ -3,11 +3,11 @@ pragma solidity 0.8.30;
 
 import {Test} from "forge-std/Test.sol";
 
-import {CustodialNFTVault} from "../../src/CustodialNFTVault.sol";
+import {CustodialNFTVault} from "custodial-vault/src/CustodialNFTVault.sol";
 import {CustodyRegistry} from "../../src/erc721c/CustodyRegistry.sol";
 import {LondonTokenCBase} from "../../src/erc721c/LondonTokenCBase.sol";
 import {LondonTokenCFactory} from "../../src/erc721c/LondonTokenCFactory.sol";
-import {ICustodialNFTVault} from "../../src/interfaces/ICustodialNFTVault.sol";
+import {ICustodialNFTVault} from "custodial-vault/src/interfaces/ICustodialNFTVault.sol";
 
 /// @dev Subset of the Limit Break Creator Token Transfer Validator v5 used by these tests.
 interface ITransferValidatorV5 {
