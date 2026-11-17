@@ -5,9 +5,6 @@ A second Studio deploy option next to the existing London ERC-721: the same arti
 earnings**. A Verse **custody exemption** keeps custody withdrawals working whatever transfer
 policy is applied to the collection later. Target chain: **Ethereum Mainnet**.
 
-> **Audit gate:** the custody exemption is royalty-bypass logic. Get an independent review
-> before mainnet deployment.
-
 ## Components
 
 | Contract | Role |
