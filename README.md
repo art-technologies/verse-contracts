@@ -8,6 +8,7 @@ Repository of smart contracts used for [Verse](https://verse.works).
 |---|---|---|
 | [`ethereum/contracts/`](ethereum/) | EVM | Payments and Random contracts (Hardhat project) |
 | [`ethereum/custodial-vault/`](ethereum/custodial-vault/) | EVM (Ethereum, Base, Polygon PoS, Shape) | `CustodialNFTVault` — custodial vault for ERC-721 / ERC-1155 assets with a rate-limited, auto-locking withdrawal path (Foundry project) |
+| [`ethereum/custodial-vault/docs/ERC721C.md`](ethereum/custodial-vault/docs/ERC721C.md) | EVM (Ethereum; staging on Base and Sepolia) | `LondonTokenCFactory`, `LondonTokenCBase` and `CustodyRegistry` — ERC-721C artist collections with configurable transfer policies and Verse custody exemptions |
 | [`tezos/payments-capturer/`](tezos/payments-capturer/) | Tezos | `PaymentsCapturer` (Archetype) |
 | [`tezos/custodial-vault/`](tezos/custodial-vault/) | Tezos | Custodial vault for FA2 / TZIP-12 assets with a rate-limited, auto-locking withdrawal path (SmartPy project) |
 | [`audit/`](audit/) | — | Third-party audit reports |
@@ -15,6 +16,11 @@ Repository of smart contracts used for [Verse](https://verse.works).
 Each project directory is self-contained: it carries its own README, toolchain
 pins, tests and deployment tooling. See the per-project READMEs for build,
 test and deployment instructions.
+
+## ERC-721C factory
+
+The deployed Ethereum mainnet factory is verified on Etherscan:
+[`0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C`](https://etherscan.io/address/0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C#code).
 
 ## Custodial vault deployments
 
