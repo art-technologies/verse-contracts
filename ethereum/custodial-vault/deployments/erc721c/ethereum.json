@@ -1,0 +1,69 @@
+{
+  "_instructions": "Approved deployment manifest for the Verse ERC721-C stack on Ethereum Mainnet. `registryOwner` MUST be the production Safe (a deployed contract): it can exempt any account from royalty enforcement on every Verse ERC721-C collection. `initialCustodians` lists the Verse custody accounts (currently the Venly custody EOA). DeployLondonTokenC.s.sol reads this file, validates it, and writes the deployment record into `.deployment`.",
+  "chainName": "ethereum",
+  "chainId": 1,
+  "registryOwner": "0x85F33bF67E9ba90bc810044b0da374C1F0DcA978",
+  "allowEOAOwner": false,
+  "initialCustodians": [
+    "0xB4B57125AF2aCf9Bf605A9D9C3D256537876f65A"
+  ],
+  "deployment": {
+    "broadcastDir": "broadcast/DeployLondonTokenC.s.sol/1",
+    "chainId": 1,
+    "custodyRegistry": "0x1a74DeF035593bD8B6EA1b41fae860E791B16e84",
+    "deploymentBlock": 26427712,
+    "factory": "0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C",
+    "factoryConstructorArgs": "0x0000000000000000000000001a74def035593bd8b6ea1b41fae860e791b16e84",
+    "factoryRuntimeBytecodeHash": "0x958b1f2375dd62eff9a6235ca97478afb9554696d48172c3f5c81cd810e33ab9",
+    "implementationRuntimeBytecodeHash": "0x87d9457d83f9271db3f7624ac1c7419d78470607a5eb1a1596086a394d59e245",
+    "registryConstructorArgs": "0x00000000000000000000000085f33bf67e9ba90bc810044b0da374c1f0dca97800000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000001000000000000000000000000b4b57125af2acf9bf605a9d9c3d256537876f65a",
+    "registryRuntimeBytecodeHash": "0x85ec6873b6007ef8e2d4022acf40d7db9b85e6e2be53ff9196469bfe799b7318",
+    "tokenImplementation": "0x488f8e5d99F7C1560103b1A44ab85F4A22584b23",
+    "factoryDeploymentBlock": 26427713,
+    "registryTransactionHash": "0x576bc0ebe49356ad81534f38e3728ce841136d0d580c9fb56c8736290224c22f",
+    "factoryTransactionHash": "0x43d9e9c2dac839dbb2a893b71e830d95fa44d9662047e961efb5f3d0179d6513",
+    "implementationTransactionHash": "0x43d9e9c2dac839dbb2a893b71e830d95fa44d9662047e961efb5f3d0179d6513",
+    "deployer": "0x6D5A4350155Ec5895096A45065ed3f20bA2FAe6e",
+    "sourceCommit": "9869463f9749e3416a5a02ffbaf57a3c343f99bf",
+    "compilerVersion": "0.8.30",
+    "optimizerRuns": 200,
+    "evmVersion": "cancun",
+    "gasCostWei": "841812297829097",
+    "verification": {
+      "sourcify": {
+        "custodyRegistry": {
+          "status": "exact_match",
+          "url": "https://sourcify.dev/#/lookup/0x1a74DeF035593bD8B6EA1b41fae860E791B16e84?chainId=1",
+          "verifiedAt": "2026-11-16T12:54:00Z"
+        },
+        "factory": {
+          "status": "exact_match",
+          "url": "https://sourcify.dev/#/lookup/0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C?chainId=1",
+          "verifiedAt": "2026-11-16T12:54:02Z"
+        },
+        "tokenImplementation": {
+          "status": "exact_match",
+          "url": "https://sourcify.dev/#/lookup/0x488f8e5d99F7C1560103b1A44ab85F4A22584b23?chainId=1",
+          "verifiedAt": "2026-11-16T12:54:01Z"
+        }
+      },
+      "etherscan": {
+        "custodyRegistry": {
+          "status": "exact_match",
+          "url": "https://etherscan.io/address/0x1a74DeF035593bD8B6EA1b41fae860E791B16e84#code",
+          "verifiedAt": "2026-11-16T16:22:54Z"
+        },
+        "factory": {
+          "status": "exact_match",
+          "url": "https://etherscan.io/address/0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C#code",
+          "verifiedAt": "2026-11-16T16:22:35Z"
+        },
+        "tokenImplementation": {
+          "status": "exact_match",
+          "url": "https://etherscan.io/address/0x488f8e5d99F7C1560103b1A44ab85F4A22584b23#code",
+          "verifiedAt": "2026-11-16T16:22:45Z"
+        }
+      }
+    }
+  }
+}

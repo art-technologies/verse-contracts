@@ -6,6 +6,11 @@ Mainnet the deployed contract is the **`CustodialNFTVaultWithPunks`**
 extension, which inherits the base vault unchanged and adds a dedicated
 **CryptoPunks** withdrawal path.
 
+This Foundry project also contains the deployed **ERC-721C artist collection**
+contracts, their shared custody-exemption registry, deployment records and tests.
+See [ERC-721C documentation](docs/ERC721C.md) for contract behavior, governance and
+verified Ethereum, Base and Sepolia addresses.
+
 ## Design summary
 
 - Deposits are ordinary (safe) token transfers; receiver callbacks are

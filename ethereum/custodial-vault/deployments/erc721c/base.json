@@ -1,0 +1,42 @@
+{
+  "_instructions": "Staging deployment manifest for the Verse ERC721-C stack on Base Mainnet (staging custody: Venly EOA 0x1039\u2026, staging CustodialNFTVault 0x1a74\u2026). Owned by the staging deployer EOA (allowEOAOwner: true), the same account that owns the staging CustodialNFTVault; transfer ownership (two-step) before retiring that key. `initialCustodians` are the staging custody accounts. DeployLondonTokenC.s.sol validates this file and writes the deployment record into `.deployment`.",
+  "chainName": "base",
+  "chainId": 8453,
+  "registryOwner": "0x6D5A4350155Ec5895096A45065ed3f20bA2FAe6e",
+  "allowEOAOwner": true,
+  "initialCustodians": [
+    "0x103978cC0BAA8249a4322b397955Fc5EEA7209F8",
+    "0x1a74DeF035593bD8B6EA1b41fae860E791B16e84"
+  ],
+  "deployment": {
+    "broadcastDir": "broadcast/DeployLondonTokenC.s.sol/8453",
+    "chainId": 8453,
+    "custodyRegistry": "0x0805bdCd64EF1f7a23c9591242F9A15a9b01F65B",
+    "factory": "0x468323BCaC8186A6BBf65ec7f14F3211B239fF78",
+    "factoryBlock": 52986914,
+    "factoryBroadcastDir": "broadcast/DeployLondonTokenCFactory.s.sol/8453",
+    "factoryConstructorArgs": "0x0000000000000000000000000805bdcd64ef1f7a23c9591242f9a15a9b01f65b",
+    "factoryRuntimeBytecodeHash": "0xe3e5df9d676a3d038928c84e2c02fd02537b3b8389f1b2f373ccedb64802ea77",
+    "factorySourceCommit": "1c9e85a06",
+    "factoryTransactionHash": "0xe82297deb80c0afa09d467bce00b475f11a9c496ca0b88b79fb7e47d6fcd2acb",
+    "implementationRuntimeBytecodeHash": "0x0b86e47375f1e3f1a2788ae07346486e23453b9488a929193b27daf01ac24797",
+    "registryBlock": 52863205,
+    "registryConstructorArgs": "0x0000000000000000000000006d5a4350155ec5895096a45065ed3f20ba2fae6e00000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000002000000000000000000000000103978cc0baa8249a4322b397955fc5eea7209f80000000000000000000000001a74def035593bd8b6ea1b41fae860e791b16e84",
+    "registryRuntimeBytecodeHash": "0x3eac7beb4fbf8ed564d30e04141fa3c83e4f3b7fcc0ce916d3efd279ec79d14f",
+    "registrySourceCommit": "a2edf2ae1a4691c293818050dd05484089dc387a",
+    "registryTransactionHash": "0xc46c810176a676154c6c950e17254f2534cfdd3d70a337d796006028545c6a86",
+    "simulationBlock": 52863202,
+    "supersededFactories": [
+      {
+        "factory": "0x36a8fc468DB63dB1ec83575e7F9BAEF9daE79B40",
+        "tokenImplementation": "0x9d6A63C99530a956684ebD1eF2d97484bDe63467",
+        "transactionHash": "0xfa1283163e5baf61da6e874807492dd33c844b12c31318b0d1e10a04edf70a0f",
+        "block": 52863206,
+        "sourceCommit": "a2edf2ae1a4691c293818050dd05484089dc387a",
+        "reason": "superseded by the 1c9e85a redeploy: no transfer-policy deploy option; still has validator auto-approval (review P1)"
+      }
+    ],
+    "tokenImplementation": "0x9f5BCc66890677944f1eAE40E8cd69a84EF7B484",
+    "verification": "Etherscan: Pass - Verified (factory, implementation, registry); registry also Sourcify exact_match"
+  }
+}
