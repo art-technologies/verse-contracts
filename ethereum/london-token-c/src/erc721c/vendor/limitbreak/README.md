@@ -17,7 +17,7 @@ at tag `v5.0.0` (commit `980a63b33591d568b6e04b45f37deba05a55f787`), under the M
 
 `utils/AutomaticValidatorTransferApproval.sol` is deliberately **not** vendored. LondonTokenC does not
 auto-approve the transfer validator, because the collection owner chooses the validator; see
-`docs/ERC721C.md`.
+the project [README](../../../../README.md).
 
 Why vendor instead of a submodule: upstream pins OpenZeppelin 4.x. Mixing its remappings with this
 repo's OpenZeppelin 5.x would give two `Context` bases in one inheritance tree. The vendored files

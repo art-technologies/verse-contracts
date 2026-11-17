@@ -46,8 +46,6 @@ bracket_spacing = false
 int_types = "long"
 quote_style = "double"
 number_underscore = "thousands"
-# Preserve the upstream Limit Break source used by the deployed ERC-721C contracts.
-ignore = ["src/erc721c/vendor/**"]
 
 [rpc_endpoints]
 ethereum = "${ETHEREUM_RPC_URL}"

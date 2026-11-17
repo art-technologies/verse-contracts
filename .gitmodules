@@ -4,3 +4,9 @@
 [submodule "ethereum/custodial-vault/lib/forge-std"]
 	path = ethereum/custodial-vault/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "ethereum/london-token-c/lib/openzeppelin-contracts"]
+	path = ethereum/london-token-c/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "ethereum/london-token-c/lib/forge-std"]
+	path = ethereum/london-token-c/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std

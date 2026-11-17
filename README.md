@@ -8,7 +8,7 @@ Repository of smart contracts used for [Verse](https://verse.works).
 |---|---|---|
 | [`ethereum/contracts/`](ethereum/) | EVM | Payments and Random contracts (Hardhat project) |
 | [`ethereum/custodial-vault/`](ethereum/custodial-vault/) | EVM (Ethereum, Base, Polygon PoS, Shape) | `CustodialNFTVault` — custodial vault for ERC-721 / ERC-1155 assets with a rate-limited, auto-locking withdrawal path (Foundry project) |
-| [`ethereum/custodial-vault/docs/ERC721C.md`](ethereum/custodial-vault/docs/ERC721C.md) | EVM (Ethereum; staging on Base and Sepolia) | `LondonTokenCFactory`, `LondonTokenCBase` and `CustodyRegistry` — ERC-721C artist collections with configurable transfer policies and Verse custody exemptions |
+| [`ethereum/london-token-c/`](ethereum/london-token-c/) | EVM (Ethereum; staging on Base and Sepolia) | `LondonTokenCFactory`, `LondonTokenCBase` and `CustodyRegistry` — ERC-721C artist collections with configurable transfer policies and Verse custody exemptions (Foundry project) |
 | [`tezos/payments-capturer/`](tezos/payments-capturer/) | Tezos | `PaymentsCapturer` (Archetype) |
 | [`tezos/custodial-vault/`](tezos/custodial-vault/) | Tezos | Custodial vault for FA2 / TZIP-12 assets with a rate-limited, auto-locking withdrawal path (SmartPy project) |
 | [`audit/`](audit/) | — | Third-party audit reports |

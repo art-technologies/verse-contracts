@@ -5,9 +5,6 @@ A second Studio deploy option next to the existing London ERC-721: the same arti
 earnings**. A Verse **custody exemption** keeps custody withdrawals working whatever transfer
 policy is applied to the collection later. Target chain: **Ethereum Mainnet**.
 
-> **Audit gate:** the custody exemption is royalty-bypass logic. Get an independent review
-> before mainnet deployment.
-
 ## Components
 
 | Contract | Role |
@@ -205,15 +202,19 @@ blocks OTC or freezes the account. Gate deposits with
 
 ## Testing
 
-Run these commands from `verse-contracts/ethereum/custodial-vault`. The existing Foundry
-project pins the compiler and dependencies used for the deployed contracts. Contract source
-paths are preserved so the factory, implementation and registry reproduce the verified
-creation/runtime bytecode and metadata.
+This is a self-contained Foundry project. Run these commands from
+`verse-contracts/ethereum/london-token-c` after `git submodule update --init --recursive`.
+`foundry.toml` pins the compiler, and `lib/` pins the dependencies used for the deployed
+contracts. Keep those settings and the `src/` paths unchanged: the factory, implementation and
+registry then reproduce the verified creation/runtime bytecode and metadata.
 
 ```bash
 forge test --match-path "test/erc721c/*"                                   # unit (mock validator)
-ETHEREUM_RPC_URL=<rpc> forge test --match-path test/fork/EthereumERC721CFork.t.sol  # live validator
+ETHEREUM_RPC_URL=<rpc> forge test --match-path "test/fork/*"               # live validator
 ```
+
+`test/fork/EthereumERC721CFork.t.sol` also deploys the real `CustodialNFTVault` from the sibling
+`../custodial-vault` project (through `include_paths`) to check vault withdrawals.
 
 Each covered behaviour was mutation-checked: removing or loosening the exemption, the validation
 hook, the initialization lock, the royalty cap, the token-type registration, the mint event pair
@@ -227,4 +228,3 @@ and the registry guards each makes at least one test fail.
    - check what happens if the artist never configures earnings;
    - check the SDK `fulfillOrder` path used by the Verse trading wallet.
 2. Venly `NFT_TRANSFER` on a LondonTokenC collection, including gas estimation.
-3. External review of the exemption and registry governance (Safe, optional timelock).
