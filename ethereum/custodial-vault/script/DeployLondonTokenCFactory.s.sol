@@ -18,7 +18,7 @@ import {LondonTokenCFactory} from "../src/erc721c/LondonTokenCFactory.sol";
 /// Reads `deployments/erc721c/<CHAIN_NAME>.json`, requires `.deployment.custodyRegistry` to be a
 /// live CustodyRegistry on the connected chain, deploys the factory, re-reads the wiring from chain,
 /// and overwrites the factory / implementation fields of `.deployment`. Previous factory records are
-/// archived by the operator (see README.md, "Deployments").
+/// archived by the operator (see docs/ERC721C.md, "Deployments").
 contract DeployLondonTokenCFactory is Script {
     using stdJson for string;
 
