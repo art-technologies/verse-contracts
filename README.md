@@ -17,6 +17,11 @@ Each project directory is self-contained: it carries its own README, toolchain
 pins, tests and deployment tooling. See the per-project READMEs for build,
 test and deployment instructions.
 
+## ERC-721C factory
+
+The deployed Ethereum mainnet factory is verified on Etherscan:
+[`0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C`](https://etherscan.io/address/0x9BCB0a7ed5b13FF6Da5B84121A3b2D744818Dd4C#code).
+
 ## Custodial vault deployments
 
 The two custodial vaults share one design (deposits are plain token transfers
