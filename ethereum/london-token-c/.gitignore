@@ -1,9 +1,0 @@
-out/
-cache/
-broadcast/
-.env
-.env.*
-!.env.example
-crytic-export/
-lcov.info
-.idea/

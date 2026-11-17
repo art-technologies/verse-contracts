@@ -205,19 +205,15 @@ blocks OTC or freezes the account. Gate deposits with
 
 ## Testing
 
-This is a self-contained Foundry project. Run these commands from
-`verse-contracts/ethereum/london-token-c` after `git submodule update --init --recursive`.
-`foundry.toml` pins the compiler, and `lib/` pins the dependencies used for the deployed
-contracts. Keep those settings and the `src/` paths unchanged: the factory, implementation and
-registry then reproduce the verified creation/runtime bytecode and metadata.
+Run these commands from `verse-contracts/ethereum/custodial-vault`. The existing Foundry
+project pins the compiler and dependencies used for the deployed contracts. Contract source
+paths are preserved so the factory, implementation and registry reproduce the verified
+creation/runtime bytecode and metadata.
 
 ```bash
 forge test --match-path "test/erc721c/*"                                   # unit (mock validator)
-ETHEREUM_RPC_URL=<rpc> forge test --match-path "test/fork/*"               # live validator
+ETHEREUM_RPC_URL=<rpc> forge test --match-path test/fork/EthereumERC721CFork.t.sol  # live validator
 ```
-
-`test/fork/EthereumERC721CFork.t.sol` also deploys the real `CustodialNFTVault` from the sibling
-`../custodial-vault` project (through `include_paths`) to check vault withdrawals.
 
 Each covered behaviour was mutation-checked: removing or loosening the exemption, the validation
 hook, the initialization lock, the royalty cap, the token-type registration, the mint event pair
